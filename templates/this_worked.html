@@ -9,6 +9,13 @@
 {% block content %}
 <!-- Active Forms -->
     <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
         <div class="row">
             <h1>Active forms</h1>
             {% for query in queries %}
@@ -17,15 +24,37 @@
                         <p class="card-subtitle mb-2 text-muted">Created By: {{ query.firstName }} {{ query.lastName }}</p>
                         <p class="card-text">{{ query.text }}</p>
                     </div>
-                    <div class="card-body">
-                        <a href="{{  url_for('patch', id=query.id)  }}"><button class="btn btn-primary">Update</button></a>
+                    <div class="row">
+                        <div class="card-body">
+                            <a href="{{  url_for('patch', id=query.id)  }}"><button class="btn btn-primary mb-1">Update</button></a>
+                            <form action="" method="POST">
+                                <input class="">
+                            </form>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
 
 <!-- Archived Forms -->
-
+    <div class="row">
+        <h1>Inactive forms</h1>
+        {% for archived in archived_results %}
+            <div class="card m-3" style="width: 18rem;">
+                <div class="card-body">
+                    <p class="card-subtitle mb-2 text-muted">Created By: {{ archived.firstName }} {{ archived.lastName }}</p>
+                    <p class="card-text">{{ archived.text }}</p>
+                </div>
+                <div class="row">
+                    <div class="card-body">
+                        <form action="{{  url_for('delete', archive_id=archived.id)  }}" method="POST">
+                            <input class="btn btn-secondary" type="submit" name="delete" value="Delete" onclick="return confirm('Are you sure?')">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
         
     </div>
