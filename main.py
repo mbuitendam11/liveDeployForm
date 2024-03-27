@@ -1,6 +1,6 @@
 import os
 # Flask imports
-from flask import Flask, abort, render_template, redirect, url_for, flash, request
+from flask import Flask, abort, render_template, redirect, url_for, flash, request, jsonify
 from flask_bootstrap import Bootstrap5
 # sqlalchemy imports
 from flask_sqlalchemy import SQLAlchemy
@@ -11,13 +11,13 @@ from forms import testForm
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('FLASH_KEY')
+app.config['SECRET_KEY'] = "os.environ.get('FLASH_KEY')"
 Bootstrap5(app)
 
 # Create Database
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///sqlite3.db"
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
@@ -49,13 +49,40 @@ def index():
         return redirect(url_for("this_worked"))
     return render_template("new_record.html", form=form)
 
+# Complete List
 @app.route("/congrats", methods=["GET", "POST"])
 def this_worked():
     result = db.session.execute(
         db.select(FormInfo)
     )
-    all_results = result.scalars()
-    return render_template("this_worked.html", queries = all_results.all())
+    all_results = result.scalars().all()
+    return render_template("this_worked.html", queries = all_results)
+
+# Update
+@app.route("/update/<int:id>", methods=["GET", "POST"])
+def patch(id):
+    form = testForm()
+    item_to_update = FormInfo.query.get_or_404(id)
+
+    if request.method == "POST":
+        item_to_update.firstName = request.form['firstName']
+        item_to_update.lastName = request.form['lastName']
+        item_to_update.text = request.form['content']
+        
+        try:
+            db.session.commit()
+            return redirect(url_for("this_worked"))
+        except:
+            return render_template("update-form.html", form=form, item_to_update=item_to_update, id=id)
+    else:
+        return render_template("update-form.html", form=form, item_to_update=item_to_update, id=id)
+
+
+
+# ARCHIVE
+
+# DELETE
+
 
 ## Debugger ##
 

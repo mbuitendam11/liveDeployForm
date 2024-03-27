@@ -1,17 +1,32 @@
 {% from "bootstrap5/form.html" import render_form %}
 {% extends "base.html" %}
+{% include "nav.html" %}
 
 {% block title %}Start{% endblock %}
 
+
+
 {% block content %}
-    <div class="row">
-        {% for query in queries %}
-            <div class="card m-3" style="width: 18rem;">
-                <div class="card-body">
-                    <p class="card-subtitle mb-2 text-muted">Created By: {{ query.firstName }} {{ query.lastName }}</p>
-                    <p class="card-text">{{ query.text }}</p>
+<!-- Active Forms -->
+    <div class="container">
+        <div class="row">
+            <h1>Active forms</h1>
+            {% for query in queries %}
+                <div class="card m-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <p class="card-subtitle mb-2 text-muted">Created By: {{ query.firstName }} {{ query.lastName }}</p>
+                        <p class="card-text">{{ query.text }}</p>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{  url_for('patch', id=query.id)  }}"><button class="btn btn-primary">Update</button></a>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+
+<!-- Archived Forms -->
+
+
+        
     </div>
 {% endblock %}

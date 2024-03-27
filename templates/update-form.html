@@ -1,0 +1,37 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% extends "base.html" %}
+
+{% block title %}Start{% endblock %}
+
+{% block content %}
+
+
+<div class="background">
+    <div class="card-parent shadow-lg p-3 bg-body-tertiary rounded-5">
+        <div class="row">
+            <h2 class="fw-bold d-flex justify-content-center">Update</h2>
+                <div class="form-floating my-3">
+                  <form action="/update/{{  item_to_update.id  }}" method="POST">
+                    {{  form.firstName.label(class="form-label")  }}
+
+                    {{  form.firstName(class="form-control", value=item_to_update.firstName)  }}
+
+                    {{  form.lastName.label(class="form-label")  }}
+
+                    {{  form.lastName(class="form-control", value=item_to_update.lastName)  }}
+
+                    {{  form.content.label(class="form-label")  }}
+
+                    {{  form.content(class="form-control", value=item_to_update.text)  }}
+
+                    {{ form.submit(class="btn btn-primary mt-2") }}
+
+                  </form>
+                    <!--{{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}-->
+                </div>                
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
